@@ -81,6 +81,15 @@
   "file": "books/67724.txt"
  },
  {
+  "id": 67725,
+  "title": "O Guarany: romance brazileiro, Vol. 2 (of 2)",
+  "author": "José Martiniano de Alencar",
+  "lang": "pt",
+  "death_year": 1877,
+  "chars": 336995,
+  "file": "books/67725.txt"
+ },
+ {
   "id": 38496,
   "title": "Ubirajara: Lenda Tupi",
   "author": "José Martiniano de Alencar",
@@ -88,6 +97,24 @@
   "death_year": 1877,
   "chars": 224189,
   "file": "books/38496.txt"
+ },
+ {
+  "id": 44540,
+  "title": "Cinco minutos",
+  "author": "José Martiniano de Alencar",
+  "lang": "pt",
+  "death_year": 1877,
+  "chars": 106394,
+  "file": "books/44540.txt"
+ },
+ {
+  "id": 67831,
+  "title": "A Pata da Gazella: romance brasileiro.",
+  "author": "José Martiniano de Alencar",
+  "lang": "pt",
+  "death_year": 1877,
+  "chars": 230448,
+  "file": "books/67831.txt"
  },
  {
   "id": 69187,
@@ -115,5 +142,50 @@
   "death_year": 1580,
   "chars": 344539,
   "file": "books/3333.txt"
+ },
+ {
+  "id": 40409,
+  "title": "Os Maias: episodios da vida romantica",
+  "author": "Eça de Queirós",
+  "lang": "pt",
+  "death_year": 1900,
+  "chars": 1332757,
+  "file": "books/40409.txt"
+ },
+ {
+  "id": 31971,
+  "title": "O crime do padre Amaro, scenas da vida devota",
+  "author": "Eça de Queirós",
+  "lang": "pt",
+  "death_year": 1900,
+  "chars": 878699,
+  "file": "books/31971.txt"
+ },
+ {
+  "id": 18220,
+  "title": "A Cidade e as Serras",
+  "author": "Eça de Queirós",
+  "lang": "pt",
+  "death_year": 1900,
+  "chars": 447716,
+  "file": "books/18220.txt"
+ },
+ {
+  "id": 16425,
+  "title": "Amor de Perdição: Memorias d'uma familia",
+  "author": "Camilo Castelo Branco",
+  "lang": "pt",
+  "death_year": 1890,
+  "chars": 310049,
+  "file": "books/16425.txt"
+ },
+ {
+  "id": 26988,
+  "title": "Amor de Salvação",
+  "author": "Camilo Castelo Branco",
+  "lang": "pt",
+  "death_year": 1890,
+  "chars": 322772,
+  "file": "books/26988.txt"
  }
 ]
