@@ -1,7 +1,7 @@
 // Guarda o app no celular para abrir sem internet.
 // Os livros em si ficam no IndexedDB (ver app.js); aqui só o "casco" do app
 // e os arquivos da Biblioteca pronta que já foram abertos.
-const VERSION = 'estante-v2';
+const VERSION = 'estante-v3';
 const SHELL = ['./', 'index.html', 'style.css', 'app.js', 'manifest.json', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

@@ -16,6 +16,9 @@ const prefs = {
 };
 
 /* ---------------- Banco de dados local (IndexedDB) ---------------- */
+// No iPhone o Safari às vezes fecha a conexão com o banco por conta própria
+// (app em segundo plano, pouca memória). Por isso a conexão é reaberta sempre
+// que cai, e cada operação tenta de novo uma vez antes de desistir.
 const db = {
   _p: null,
   open() {
@@ -27,45 +30,65 @@ const db = {
         if (!d.objectStoreNames.contains('books')) d.createObjectStore('books', { keyPath: 'id' });
         if (!d.objectStoreNames.contains('texts')) d.createObjectStore('texts', { keyPath: 'id' });
       };
-      r.onsuccess = () => res(r.result);
+      r.onsuccess = () => {
+        const d = r.result;
+        d.onclose = () => { if (this._p === p) this._p = null; };
+        d.onversionchange = () => { d.close(); if (this._p === p) this._p = null; };
+        res(d);
+      };
       r.onerror = () => rej(r.error);
+      r.onblocked = () => rej(new Error('blocked'));
     });
-    return this._p;
+    const p = this._p;
+    p.catch(() => { if (this._p === p) this._p = null; });
+    return p;
   },
-  async tx(store, mode, fn) {
-    const d = await this.open();
-    return new Promise((res, rej) => {
-      const t = d.transaction(store, mode);
-      const s = t.objectStore(store);
-      const out = fn(s);
-      t.oncomplete = () => res(out && 'result' in out ? out.result : out);
-      t.onerror = () => rej(t.error);
-      t.onabort = () => rej(t.error);
-    });
+  async run(stores, mode, fn) {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        const d = await this.open();
+        return await new Promise((res, rej) => {
+          const t = d.transaction(stores, mode);
+          const out = fn(t);
+          t.oncomplete = () => res(out && typeof out === 'object' && 'result' in out ? out.result : out);
+          t.onerror = () => rej(t.error);
+          t.onabort = () => rej(t.error || new Error('abort'));
+        });
+      } catch (err) {
+        // conexão fechada/inválida: descarta e tenta de novo com uma conexão nova
+        try { (await this._p)?.close(); } catch {}
+        this._p = null;
+        if (attempt >= 1) throw friendlyDbError(err);
+        await new Promise(r => setTimeout(r, 150));
+      }
+    }
   },
-  allBooks() { return this.tx('books', 'readonly', s => s.getAll()); },
-  getBook(id) { return this.tx('books', 'readonly', s => s.get(id)); },
-  putBook(b) { return this.tx('books', 'readwrite', s => s.put(b)); },
-  getText(id) { return this.tx('texts', 'readonly', s => s.get(id)); },
-  async save(book, text) {
-    const d = await this.open();
-    return new Promise((res, rej) => {
-      const t = d.transaction(['books', 'texts'], 'readwrite');
+  allBooks() { return this.run('books', 'readonly', t => t.objectStore('books').getAll()); },
+  getBook(id) { return this.run('books', 'readonly', t => t.objectStore('books').get(id)); },
+  putBook(b) { return this.run('books', 'readwrite', t => t.objectStore('books').put(b)); },
+  getText(id) { return this.run('texts', 'readonly', t => t.objectStore('texts').get(id)); },
+  save(book, text) {
+    return this.run(['books', 'texts'], 'readwrite', t => {
       t.objectStore('books').put(book);
       t.objectStore('texts').put({ id: book.id, text });
-      t.oncomplete = res; t.onerror = () => rej(t.error); t.onabort = () => rej(t.error || new Error('Sem espaço'));
     });
   },
-  async remove(id) {
-    const d = await this.open();
-    return new Promise((res, rej) => {
-      const t = d.transaction(['books', 'texts'], 'readwrite');
+  remove(id) {
+    return this.run(['books', 'texts'], 'readwrite', t => {
       t.objectStore('books').delete(id);
       t.objectStore('texts').delete(id);
-      t.oncomplete = res; t.onerror = () => rej(t.error);
     });
   },
 };
+
+function friendlyDbError(err) {
+  const name = err?.name || '';
+  const e = new Error(name === 'QuotaExceededError'
+    ? 'Sem espaço para guardar o livro neste celular. Remova algum livro da estante e tente de novo.'
+    : 'O navegador não deixou guardar o livro agora. Toque em "Tentar de novo". Se continuar, abra o app pelo Safari (ou pelo ícone na tela de início), não por dentro de outro aplicativo.');
+  e.cause = err;
+  return e;
+}
 
 /* ---------------- Utilidades ---------------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
