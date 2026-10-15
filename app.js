@@ -445,19 +445,22 @@ function buildBookHTML(book, text) {
 
     if (/^[\s*·.•\-_=~]+$/.test(joined)) { out.push(`<p class="sep">⁂</p>`); lastWasHeading = false; continue; }
 
+    // Subtítulo logo após "CAPÍTULO X" / "IV": uma linha curta (ex.: "Do titulo.") junta-se ao título
+    const prev = toc[toc.length - 1];
+    if (lastWasHeading && prev?.chap && !prev.merged && trimmed.length === 1 && joined.length <= 60 && !CHAP_RE.test(joined)) {
+      const sub = joined.replace(/\.$/, '');
+      prev.label += ' — ' + sub; prev.merged = true;
+      out[out.length - 1] = out[out.length - 1].replace(/<\/h2>$/, `<br><small>${inline(sub)}</small></h2>`);
+      lastWasHeading = false;
+      continue;
+    }
+
     if (isHeading(trimmed)) {
       const label = joined;
-      if (lastWasHeading && toc.length && !CHAP_RE.test(label)) {
-        // subtítulo logo após o título do capítulo: junta os dois
-        const prev = toc[toc.length - 1];
-        prev.label += ' — ' + label;
-        out[out.length - 1] = out[out.length - 1].replace(/<\/h2>$/, `<br><small>${inline(label)}</small></h2>`);
-        continue;
-      }
       const id = 'h' + (hCount++);
-      const chap = CHAP_RE.test(label) ? ' chap' : '';
-      out.push(`<h2 id="${id}" class="${chap.trim()}">${inline(label)}</h2>`);
-      toc.push({ id, label });
+      const chap = CHAP_RE.test(label);
+      out.push(`<h2 id="${id}" class="${chap ? 'chap' : ''}">${inline(label)}</h2>`);
+      toc.push({ id, label, chap });
       lastWasHeading = true;
       continue;
     }
@@ -471,7 +474,9 @@ function buildBookHTML(book, text) {
       out.push(`<p>${inline(joined.replace(/\s{2,}/g, ' '))}</p>`);
     }
   }
-  return { html: out.join('\n'), toc };
+  // Se há capítulos reconhecíveis, o sumário mostra só eles (sem folha de rosto, editora etc.)
+  const chapters = toc.filter(t => t.chap);
+  return { html: out.join('\n'), toc: chapters.length >= 3 ? chapters : toc };
 }
 
 /* ---------------- Leitor paginado ---------------- */
