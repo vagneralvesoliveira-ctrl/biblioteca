@@ -1,1 +1,119 @@
-[]
+[
+ {
+  "id": 55752,
+  "title": "Dom Casmurro",
+  "author": "Machado de Assis",
+  "lang": "pt",
+  "death_year": 1908,
+  "chars": 409137,
+  "file": "books/55752.txt"
+ },
+ {
+  "id": 54829,
+  "title": "Memorias Posthumas de Braz Cubas",
+  "author": "Machado de Assis",
+  "lang": "pt",
+  "death_year": 1908,
+  "chars": 394414,
+  "file": "books/54829.txt"
+ },
+ {
+  "id": 55682,
+  "title": "Quincas Borba",
+  "author": "Machado de Assis",
+  "lang": "pt",
+  "death_year": 1908,
+  "chars": 482005,
+  "file": "books/55682.txt"
+ },
+ {
+  "id": 56737,
+  "title": "Esau e Jacob",
+  "author": "Machado de Assis",
+  "lang": "pt",
+  "death_year": 1908,
+  "chars": 443612,
+  "file": "books/56737.txt"
+ },
+ {
+  "id": 55797,
+  "title": "Memorial de Ayres",
+  "author": "Machado de Assis",
+  "lang": "pt",
+  "death_year": 1908,
+  "chars": 315831,
+  "file": "books/55797.txt"
+ },
+ {
+  "id": 57001,
+  "title": "Papeis Avulsos",
+  "author": "Machado de Assis",
+  "lang": "pt",
+  "death_year": 1908,
+  "chars": 348098,
+  "file": "books/57001.txt"
+ },
+ {
+  "id": 67162,
+  "title": "Helena",
+  "author": "Machado de Assis",
+  "lang": "pt",
+  "death_year": 1908,
+  "chars": 362409,
+  "file": "books/67162.txt"
+ },
+ {
+  "id": 67740,
+  "title": "Iracema",
+  "author": "José Martiniano de Alencar",
+  "lang": "pt",
+  "death_year": 1877,
+  "chars": 203030,
+  "file": "books/67740.txt"
+ },
+ {
+  "id": 67724,
+  "title": "O Guarany: romance brazileiro, Vol. 1 (of 2)",
+  "author": "José Martiniano de Alencar",
+  "lang": "pt",
+  "death_year": 1877,
+  "chars": 363471,
+  "file": "books/67724.txt"
+ },
+ {
+  "id": 38496,
+  "title": "Ubirajara: Lenda Tupi",
+  "author": "José Martiniano de Alencar",
+  "lang": "pt",
+  "death_year": 1877,
+  "chars": 224189,
+  "file": "books/38496.txt"
+ },
+ {
+  "id": 69187,
+  "title": "O Cortiço",
+  "author": "Aluísio Azevedo",
+  "lang": "pt",
+  "death_year": 1913,
+  "chars": 501093,
+  "file": "books/69187.txt"
+ },
+ {
+  "id": 68635,
+  "title": "Innocencia",
+  "author": "Alfredo d'Escragnolle Taunay Taunay",
+  "lang": "pt",
+  "death_year": 1899,
+  "chars": 345295,
+  "file": "books/68635.txt"
+ },
+ {
+  "id": 3333,
+  "title": "Os Lusíadas",
+  "author": "Luís de Camões",
+  "lang": "pt",
+  "death_year": 1580,
+  "chars": 344539,
+  "file": "books/3333.txt"
+ }
+]
