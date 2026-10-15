@@ -224,7 +224,9 @@ const explore = {
     }
     const moreBtn = $('#moreBtn'); if (moreBtn) { moreBtn.disabled = true; moreBtn.textContent = 'Carregando…'; }
     try {
-      const r = await fetch(url);
+      // o catálogo de busca (Gutendex) às vezes fica lento: desiste depois de 25 s
+      const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 25000);
+      const r = await fetch(url, { signal: ctl.signal }).finally(() => clearTimeout(to));
       if (!r.ok) throw new Error(r.status);
       const data = await r.json();
       if (id !== this.reqId) return;
@@ -249,7 +251,7 @@ const explore = {
       if (this.next) $('#resultList').insertAdjacentHTML('afterend', `<button class="btn small" id="moreBtn" style="margin:14px auto 0;display:flex">Carregar mais</button>`);
     } catch (err) {
       if (id !== this.reqId) return;
-      box.innerHTML = `<div class="notice">${navigator.onLine ? 'Não consegui acessar o catálogo do Gutenberg agora. A biblioteca pronta abaixo continua disponível.' : 'Você está sem internet. Os livros da estante e da biblioteca pronta continuam disponíveis.'}</div>`;
+      box.innerHTML = `<div class="notice">${navigator.onLine ? 'O catálogo do Gutenberg não respondeu agora (às vezes ele fica lento). Tente a busca de novo em instantes; a biblioteca pronta abaixo continua disponível.' : 'Você está sem internet. Os livros da estante e da biblioteca pronta continuam disponíveis.'}</div>`;
     }
   },
   cache: new Map(),
