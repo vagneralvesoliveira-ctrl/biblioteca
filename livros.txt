@@ -1,42 +1,35 @@
 # Biblioteca pronta da Estante
-# Cada linha é um livro. Pode ser:
-#   - o número do livro no Project Gutenberg (ex.: 55752), ou
-#   - palavras do título e do autor (ex.: Casmurro Assis)
+# Cada linha é um livro: o número dele no Project Gutenberg (ex.: 55752)
+# ou palavras do título e do autor (ex.: Casmurro Assis).
 # Ao salvar este arquivo no GitHub, os livros são baixados automaticamente
-# e aparecem no app em uns 2 minutos. Linhas com # são ignoradas.
+# e aparecem no app em uns 2 minutos. O que vem depois de # é ignorado.
+# Pedidos feitos pelo botão "Pedir ao GitHub" do app entram no fim da lista.
 
 # Machado de Assis
-Casmurro Assis
-Braz Cubas Assis
-Quincas Borba Assis
-Esau Jacob Assis
-Memorial Ayres Assis
-Papeis Avulsos Assis
-Helena Assis
-Iaiá Garcia Assis
+55752  # Dom Casmurro
+54829  # Memórias Póstumas de Brás Cubas
+55682  # Quincas Borba
+56737  # Esaú e Jacó
+55797  # Memorial de Aires
+57001  # Papéis Avulsos (inclui O Alienista)
+67162  # Helena
 
 # José de Alencar
-Iracema Alencar
-Guarany Alencar
-Senhora Alencar
-Luciola Alencar
-Ubirajara Alencar
+67740  # Iracema
+67724  # O Guarani, vol. 1
+67725  # O Guarani, vol. 2
+38496  # Ubirajara
+44540  # Cinco Minutos
+67831  # A Pata da Gazela
 
 # Outros brasileiros
-Moreninha Macedo
-Cortiço Azevedo
-Mulato Azevedo
-Sertões Cunha
-Policarpo Quaresma Barreto
-Isaias Caminha Barreto
-Innocencia Taunay
-Sargento Milicias Almeida
-Canaan Aranha
+69187  # O Cortiço — Aluísio Azevedo
+68635  # Inocência — Visconde de Taunay
 
 # Portugueses
-Lusiadas Camões
-Maias Queiroz
-Primo Basilio Queiroz
-Padre Amaro Queiroz
-Cidade Serras Queiroz
-Amor Perdição Castello Branco
+3333   # Os Lusíadas — Camões
+40409  # Os Maias — Eça de Queirós
+31971  # O Crime do Padre Amaro — Eça de Queirós
+18220  # A Cidade e as Serras — Eça de Queirós
+16425  # Amor de Perdição — Camilo Castelo Branco
+26988  # Amor de Salvação — Camilo Castelo Branco
