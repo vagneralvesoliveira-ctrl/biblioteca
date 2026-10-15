@@ -178,7 +178,8 @@ const shelf = {
 const explore = {
   started: false, catalog: [], lang: prefs.get('lang'), next: null, query: '', reqId: 0,
   async init() {
-    if (this.started) return; this.started = true;
+    if (this.started) { this.loadCatalog(); return; } // recarrega: pedidos feitos ao GitHub aparecem aqui
+    this.started = true;
     $$('#langChips .chip').forEach(c => {
       const on = c.dataset.lang === this.lang;
       c.classList.toggle('active', on); c.setAttribute('aria-checked', on);
@@ -324,7 +325,14 @@ async function gutenbergSheet(gid, fromCatalog) {
     } catch (err) {
       btn.textContent = 'Tentar de novo'; btn.disabled = false;
       const ri = repoInfo();
-      $('#sMsg').innerHTML = `<div class="notice">${esc(err.message)}${err.blocked && ri ? `<br><br>Para trazer este livro, peça ao GitHub: abra <a href="https://github.com/${ri.owner}/${ri.repo}/edit/main/livros.txt" target="_blank" rel="noopener">livros.txt</a>, adicione uma linha com o número <strong>${esc(m.gid)}</strong> e salve. Em uns 2 minutos ele aparece na Biblioteca pronta.` : ''}</div>`;
+      if (err.blocked && ri) {
+        const q = new URLSearchParams({ title: `Livro ${m.gid}`, body: `${m.title} — ${m.author}` });
+        btn.hidden = true;
+        $('#sMsg').innerHTML = `<div class="notice" style="margin-top:0">O Gutenberg não deixa baixar este livro direto pelo celular. O GitHub pode buscá-lo para você: toque abaixo e depois em <strong>Create</strong> (ou <strong>Submit</strong>). Em uns 2 minutos ele aparece na <strong>Biblioteca pronta</strong>.</div>
+          <a class="btn primary" style="width:100%;text-decoration:none" href="https://github.com/${ri.owner}/${ri.repo}/issues/new?${q}" target="_blank" rel="noopener">Pedir ao GitHub</a>`;
+      } else {
+        $('#sMsg').innerHTML = `<div class="notice">${esc(err.message)}</div>`;
+      }
     }
   });
 }
