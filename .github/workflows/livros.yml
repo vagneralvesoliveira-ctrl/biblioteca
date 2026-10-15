@@ -5,9 +5,13 @@ on:
     branches: [main]
     paths: [livros.txt, scripts/baixar_livros.py]
   workflow_dispatch:
+  # Pedido feito pelo botão "Pedir ao GitHub" do app: abre uma issue "Livro 12345"
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: biblioteca
@@ -16,21 +20,44 @@ concurrency:
 jobs:
   baixar:
     runs-on: ubuntu-latest
+    # Só atende pedidos do dono do repositório (evita que terceiros encham a biblioteca)
+    if: github.event_name != 'issues' || (github.event.issue.user.login == github.repository_owner && startsWith(github.event.issue.title, 'Livro '))
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Incluir livro pedido na lista
+        if: github.event_name == 'issues'
+        env:
+          TITLE: ${{ github.event.issue.title }}
+        run: |
+          ID=$(echo "$TITLE" | grep -oE '[0-9]+' | head -1)
+          if [ -z "$ID" ]; then echo "Pedido sem número de livro"; exit 1; fi
+          grep -qxF "$ID" livros.txt || printf '\n%s\n' "$ID" >> livros.txt
+          echo "BOOK_ID=$ID" >> "$GITHUB_ENV"
       - name: Baixar livros da lista
-        run: python scripts/baixar_livros.py
+        run: python -u scripts/baixar_livros.py
       - name: Salvar no repositório
         run: |
           git config user.name "estante-bot"
           git config user.email "estante-bot@users.noreply.github.com"
-          git add books catalog.json
+          git add livros.txt books catalog.json
           if git diff --cached --quiet; then
             echo "Nada novo."
           else
             git commit -m "Atualiza biblioteca pronta"
+            git pull --rebase origin main
             git push
+          fi
+      - name: Responder o pedido
+        if: github.event_name == 'issues' && always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUM: ${{ github.event.issue.number }}
+        run: |
+          if [ -f "books/${BOOK_ID}.txt" ]; then
+            gh issue close "$NUM" --repo "$GITHUB_REPOSITORY" --comment "Pronto! O livro ${BOOK_ID} está na Biblioteca pronta. Abra o app e toque em Baixar (pode levar 1 ou 2 minutos para aparecer)."
+          else
+            gh issue close "$NUM" --repo "$GITHUB_REPOSITORY" --comment "Não consegui baixar o livro ${BOOK_ID} do Gutenberg. Veja o registro desta execução para detalhes."
           fi
