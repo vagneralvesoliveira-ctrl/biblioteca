@@ -187,5 +187,14 @@
   "death_year": 1890,
   "chars": 322772,
   "file": "books/26988.txt"
+ },
+ {
+  "id": 29040,
+  "title": "Como e porque sou romancista",
+  "author": "José Martiniano de Alencar",
+  "lang": "pt",
+  "death_year": 1877,
+  "chars": 79397,
+  "file": "books/29040.txt"
  }
 ]
