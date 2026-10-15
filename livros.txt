@@ -1,0 +1,42 @@
+# Biblioteca pronta da Estante
+# Cada linha é um livro. Pode ser:
+#   - o número do livro no Project Gutenberg (ex.: 55752), ou
+#   - palavras do título e do autor (ex.: Casmurro Assis)
+# Ao salvar este arquivo no GitHub, os livros são baixados automaticamente
+# e aparecem no app em uns 2 minutos. Linhas com # são ignoradas.
+
+# Machado de Assis
+Casmurro Assis
+Braz Cubas Assis
+Quincas Borba Assis
+Esau Jacob Assis
+Memorial Ayres Assis
+Papeis Avulsos Assis
+Helena Assis
+Iaiá Garcia Assis
+
+# José de Alencar
+Iracema Alencar
+Guarany Alencar
+Senhora Alencar
+Luciola Alencar
+Ubirajara Alencar
+
+# Outros brasileiros
+Moreninha Macedo
+Cortiço Azevedo
+Mulato Azevedo
+Sertões Cunha
+Policarpo Quaresma Barreto
+Isaias Caminha Barreto
+Innocencia Taunay
+Sargento Milicias Almeida
+Canaan Aranha
+
+# Portugueses
+Lusiadas Camões
+Maias Queiroz
+Primo Basilio Queiroz
+Padre Amaro Queiroz
+Cidade Serras Queiroz
+Amor Perdição Castello Branco

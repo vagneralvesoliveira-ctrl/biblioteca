@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estante</title>
+<meta name="description" content="Leitor de livros em domínio público, que funciona sem internet.">
+<meta name="theme-color" content="#f4efe6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16130f" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Estante">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ========== Telas principais ========== -->
+<div id="app">
+  <header class="topbar">
+    <h1 class="brand">Estante</h1>
+    <button class="icon-btn" id="btnImport" aria-label="Importar arquivo de texto" title="Importar .txt">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+    </button>
+    <input type="file" id="fileInput" accept=".txt,text/plain" hidden>
+  </header>
+
+  <main>
+    <!-- Estante -->
+    <section id="view-shelf" class="view active" aria-label="Minha estante">
+      <div class="section-head">
+        <h2>Minha estante</h2>
+        <span class="muted" id="shelfCount"></span>
+      </div>
+      <div id="continueCard"></div>
+      <div id="shelfGrid" class="grid"></div>
+      <div id="shelfEmpty" class="empty" hidden>
+        <p class="empty-title">Sua estante está vazia</p>
+        <p class="muted">Vá em <strong>Explorar</strong> e baixe um livro. Depois de baixado, ele fica no celular e abre mesmo sem internet.</p>
+        <button class="btn primary" data-goto="explore">Explorar livros</button>
+      </div>
+    </section>
+
+    <!-- Explorar -->
+    <section id="view-explore" class="view" aria-label="Explorar livros">
+      <form id="searchForm" class="search" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        <input id="searchInput" type="search" placeholder="Título ou autor" autocomplete="off" enterkeyhint="search">
+      </form>
+      <div class="chips" id="langChips" role="radiogroup" aria-label="Idioma">
+        <button class="chip active" data-lang="pt" role="radio" aria-checked="true">Português</button>
+        <button class="chip" data-lang="en" role="radio" aria-checked="false">Inglês</button>
+        <button class="chip" data-lang="es" role="radio" aria-checked="false">Espanhol</button>
+        <button class="chip" data-lang="fr" role="radio" aria-checked="false">Francês</button>
+        <button class="chip" data-lang="" role="radio" aria-checked="false">Todos</button>
+      </div>
+
+      <div id="searchResults"></div>
+
+      <div id="curated">
+        <div class="section-head">
+          <h2>Biblioteca pronta</h2>
+          <span class="muted">sempre disponível</span>
+        </div>
+        <div id="curatedList" class="list"></div>
+      </div>
+
+      <p class="footnote">Acervo do <a href="https://www.gutenberg.org" target="_blank" rel="noopener">Project Gutenberg</a>. Alguns títulos podem não estar em domínio público no Brasil (Lei 9.610/98, art. 41).</p>
+    </section>
+  </main>
+
+  <nav class="tabbar" aria-label="Navegação">
+    <button class="tab active" data-goto="shelf">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4v16H5zM10 4h4v16h-4zM15.5 5.2l3.8-1 3.2 15.5-3.8 1z"/></svg>
+      <span>Estante</span>
+    </button>
+    <button class="tab" data-goto="explore">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
+      <span>Explorar</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ========== Leitor ========== -->
+<div id="reader" hidden>
+  <div id="pageViewport">
+    <div id="flow"></div>
+  </div>
+  <div id="pageFooter"><span id="footChapter"></span><span id="footPage"></span></div>
+
+  <div id="readerChrome" hidden>
+    <div class="chrome-top">
+      <button class="icon-btn" id="btnClose" aria-label="Voltar à estante">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="chrome-title"><strong id="rTitle"></strong><span id="rAuthor"></span></div>
+      <button class="icon-btn" id="btnToc" aria-label="Sumário">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      </button>
+    </div>
+    <div class="chrome-bottom">
+      <div class="progress-row">
+        <input type="range" id="progress" min="0" max="100" value="0" aria-label="Posição no livro">
+        <span id="progressLabel">0%</span>
+      </div>
+      <div class="settings-row">
+        <div class="seg" role="group" aria-label="Tamanho da letra">
+          <button id="fontDown" aria-label="Diminuir letra">A−</button>
+          <button id="fontUp" aria-label="Aumentar letra">A+</button>
+        </div>
+        <div class="seg" role="group" aria-label="Tema">
+          <button data-theme="light" class="swatch sw-light" aria-label="Claro"></button>
+          <button data-theme="sepia" class="swatch sw-sepia" aria-label="Sépia"></button>
+          <button data-theme="dark" class="swatch sw-dark" aria-label="Escuro"></button>
+        </div>
+        <div class="seg" role="group" aria-label="Fonte">
+          <button id="fontFamily" aria-label="Trocar fonte">Aa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tocPanel" hidden>
+    <div class="toc-head">
+      <h2>Sumário</h2>
+      <button class="icon-btn" id="btnTocClose" aria-label="Fechar sumário">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <ol id="tocList"></ol>
+  </div>
+</div>
+
+<!-- ========== Diálogo do livro ========== -->
+<div id="sheet" hidden>
+  <div class="sheet-backdrop" data-close></div>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-grip"></div>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
